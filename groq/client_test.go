@@ -1,6 +1,9 @@
 package groq
 
 import (
+	"context"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 	"time"
@@ -69,5 +72,32 @@ func TestNewClient_Logger(t *testing.T) {
 
 	if c.config.Logger != logger {
 		t.Error("Logger not set correctly")
+	}
+}
+
+func TestClient_PostStream(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/event-stream")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("data: hello\n\n"))
+	}))
+	defer server.Close()
+
+	c, err := NewClient(
+		WithAPIKey("test-key"),
+		WithBaseURL(server.URL),
+	)
+	if err != nil {
+		t.Fatalf("NewClient error: %v", err)
+	}
+
+	resp, err := c.PostStream(context.Background(), "/stream", nil)
+	if err != nil {
+		t.Fatalf("PostStream error: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		t.Errorf("StatusCode = %d, want 200", resp.StatusCode)
 	}
 }

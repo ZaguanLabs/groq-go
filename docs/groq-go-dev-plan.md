@@ -853,13 +853,13 @@ type ValidationError struct{ Error }
 
 ### Phase 4: Chat Completions (Week 4-5)
 **Deliverables**:
-- [ ] `chat.Completions` service struct
-- [ ] `Create()` method with full parameter support
-- [ ] `CreateStream()` for streaming responses
-- [ ] SSE decoder implementation
-- [ ] Stream type with `Next()` iterator
-- [ ] Integration tests with real API
-- [ ] Examples: basic completion, streaming, function calling
+- [x] `chat.Completions` service struct
+- [x] `Create()` method with full parameter support
+- [x] `CreateStream()` for streaming responses
+- [x] SSE decoder implementation
+- [x] Stream type with `Next()` iterator
+- [x] Integration tests with real API
+- [x] Examples: basic completion, streaming, function calling
 
 ### Phase 5: Remaining Resources (Week 5-7)
 **Deliverables**:

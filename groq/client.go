@@ -136,6 +136,54 @@ func (c *Client) Post(ctx context.Context, path string, body, result interface{}
 	return nil
 }
 
+// PostStream sends a POST request and returns the raw response for streaming
+func (c *Client) PostStream(ctx context.Context, path string, body interface{}, opts ...option.RequestOption) (*http.Response, error) {
+	reqOpts := &option.RequestOptions{
+		Headers:     make(map[string]string),
+		QueryParams: make(map[string]string),
+	}
+	for _, opt := range opts {
+		opt(reqOpts)
+	}
+
+	// Build request
+	req, err := c.buildRequest(ctx, http.MethodPost, path, body, reqOpts)
+	if err != nil {
+		return nil, err
+	}
+
+	// Execute with retry
+	resp, err := c.doWithRetry(ctx, req, reqOpts)
+	if err != nil {
+		return nil, err
+	}
+
+	// Handle errors
+	if resp.StatusCode >= 400 {
+		defer resp.Body.Close()
+		return nil, c.handleError(resp)
+	}
+
+	// Validate Content-Type if strict validation is enabled
+	if c.config.StrictValidation {
+		ct := resp.Header.Get("Content-Type")
+		// Streaming usually returns text/event-stream
+		if !strings.HasPrefix(ct, "text/event-stream") && !strings.HasPrefix(ct, "application/json") {
+			defer resp.Body.Close()
+			return nil, &APIError{
+				GroqError: GroqError{
+					Message: fmt.Sprintf("Expected Content-Type text/event-stream or application/json, got %s", ct),
+					Request: req,
+				},
+				Response:   resp,
+				StatusCode: resp.StatusCode,
+			}
+		}
+	}
+
+	return resp, nil
+}
+
 func (c *Client) buildRequest(ctx context.Context, method, path string, body interface{}, opts *option.RequestOptions) (*http.Request, error) {
 	url := c.buildURL(path, opts)
 
