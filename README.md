@@ -1,14 +1,32 @@
-# Groq Go SDK
+# Groq Go SDK 🚀
 
-Unfficial Go client library for accessing the [Groq API](https://console.groq.com/docs/api-reference). This SDK provides a strongly-typed, idiomatic Go experience for interacting with Groq's LPU™ Inference Engine.
+[![Go Reference](https://pkg.go.dev/badge/github.com/ZaguanLabs/groq-go.svg)](https://pkg.go.dev/github.com/ZaguanLabs/groq-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/ZaguanLabs/groq-go)](https://goreportcard.com/report/github.com/ZaguanLabs/groq-go)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-## Installation
+Welcome to the **unofficial** Go client library for the [Groq Cloud API](https://console.groq.com/docs/api-reference)!
+
+This SDK is designed to provide a **strongly-typed**, **idiomatic**, and **robust** experience for Go developers building next-generation AI applications on Groq's blazing-fast LPU™ Inference Engine.
+
+> ⚠️ **Note**: This project is currently in **Alpha (v0.1.0)**. While strictly tested, APIs may evolve as we reach 1.0 stability.
+
+---
+
+## 🌟 Why use this SDK?
+
+- **Idiomatic Go**: Built with `context`, functional options, and strict typing in mind.
+- **Complete Coverage**: Supports Chat, Audio, Embeddings, Models, Files, and Batches.
+- **Production Ready**: Built-in exponential backoff retries, rate limit handling, and safe error types.
+- **Streaming First**: Native support for Server-Sent Events (SSE) with easy-to-use iterators.
+- **Precise Control**: Generic `Optional[T]` types allow you to distinguish between zero-values and omitted fields.
+
+## 📦 Installation
 
 ```bash
 go get github.com/ZaguanLabs/groq-go/groq
 ```
 
-## Quickstart
+## 🚀 Quickstart
 
 ```go
 package main
@@ -51,7 +69,7 @@ func main() {
 }
 ```
 
-## Features
+## 📚 Supported APIs
 
 - **Chat Completions**: Standard and streaming support via Server-Sent Events (SSE).
 - **Audio**: Speech generation, transcription, and translation.
@@ -59,10 +77,8 @@ func main() {
 - **Models**: List and retrieve available models.
 - **Files**: Upload, list, and retrieve files.
 - **Batches**: Batch processing operations.
-- **Robustness**: Automatic retries with exponential backoff, context cancellation support.
-- **Type Safety**: Comprehensive types for requests and responses, including `Optional[T]` for handling null/omitted fields.
 
-## Examples
+## 💡 Examples
 
 Check the [groq/examples/](groq/examples/) directory for runnable examples:
 
@@ -117,6 +133,16 @@ client.Chat.Create(ctx, req,
 - `groq/option/`: Functional options and Optional type
 - `groq/chat/`, `groq/audio/`, etc.: Resource-specific packages
 
-## Contributing
+## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are strictly encouraged! We love the open source community.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+Distributed under the Apache 2.0 License. See `LICENSE` for more information.
