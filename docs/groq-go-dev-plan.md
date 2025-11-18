@@ -834,12 +834,12 @@ type ValidationError struct{ Error }
 
 ### Phase 2: Request Infrastructure (Week 2-3)
 **Deliverables**:
-- [ ] Request building: headers, auth, URL construction
-- [ ] Retry logic: exponential backoff, jitter, `Retry-After` parsing
-- [ ] Query string encoding: comma arrays, nested objects
-- [ ] Request options: functional options pattern
-- [ ] Response parsing: JSON unmarshaling, content-type validation
-- [ ] Unit tests: retry scenarios, query encoding, header merging
+- [x] Request building: headers, auth, URL construction
+- [x] Retry logic: exponential backoff, jitter, `Retry-After` parsing
+- [x] Query string encoding: comma arrays, nested objects
+- [x] Request options: functional options pattern
+- [x] Response parsing: JSON unmarshaling, content-type validation
+- [x] Unit tests: retry scenarios, query encoding, header merging
 
 ### Phase 3: Type System (Week 3-4)
 **Deliverables**:

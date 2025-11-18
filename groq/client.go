@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/ZaguanLabs/groq-go/groq/chat"
+	"github.com/ZaguanLabs/groq-go/groq/internal/querystring"
 	"github.com/ZaguanLabs/groq-go/groq/internal/retry"
 	"github.com/ZaguanLabs/groq-go/groq/option"
 )
@@ -110,6 +111,21 @@ func (c *Client) Post(ctx context.Context, path string, body, result interface{}
 		return c.handleError(resp)
 	}
 
+	// Validate Content-Type if strict validation is enabled
+	if c.config.StrictValidation {
+		ct := resp.Header.Get("Content-Type")
+		if !strings.HasPrefix(ct, "application/json") {
+			return &APIError{
+				GroqError: GroqError{
+					Message: fmt.Sprintf("Expected Content-Type application/json, got %s", ct),
+					Request: req,
+				},
+				Response:   resp,
+				StatusCode: resp.StatusCode,
+			}
+		}
+	}
+
 	// Parse response
 	if result != nil {
 		if err := json.NewDecoder(resp.Body).Decode(result); err != nil {
@@ -142,10 +158,30 @@ func (c *Client) buildRequest(ctx context.Context, method, path string, body int
 }
 
 func (c *Client) buildURL(path string, opts *option.RequestOptions) string {
-	// Simple concatenation for now, can be improved with net/url
 	baseURL := strings.TrimSuffix(c.config.BaseURL, "/")
 	path = strings.TrimPrefix(path, "/")
-	return fmt.Sprintf("%s/%s", baseURL, path)
+	u := fmt.Sprintf("%s/%s", baseURL, path)
+
+	// Merge query params
+	query := make(map[string]interface{})
+	for k, v := range c.config.QueryParams {
+		query[k] = v
+	}
+	if opts != nil {
+		for k, v := range opts.QueryParams {
+			query[k] = v
+		}
+	}
+
+	if len(query) > 0 {
+		if qs, err := querystring.Stringify(query); err == nil && qs != "" {
+			u += "?" + qs
+		} else if err != nil && c.config.Logger != nil {
+			c.config.Logger.Warn("Failed to serialize query parameters: %v", err)
+		}
+	}
+
+	return u
 }
 
 func (c *Client) setHeaders(req *http.Request, opts *option.RequestOptions) {

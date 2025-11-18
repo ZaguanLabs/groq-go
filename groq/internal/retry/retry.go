@@ -37,10 +37,16 @@ func DefaultShouldRetry(resp *http.Response) bool {
 func CalculateBackoff(attempt int, resp *http.Response) time.Duration {
 	// Check Retry-After header
 	if retryAfter := resp.Header.Get("retry-after"); retryAfter != "" {
-		if seconds, err := strconv.Atoi(retryAfter); err == nil && seconds > 0 && seconds <= 60 {
+		// Try parsing as seconds
+		if seconds, err := strconv.Atoi(retryAfter); err == nil && seconds > 0 {
 			return time.Duration(seconds) * time.Second
 		}
-		// Could also parse HTTP-date format here
+		// Try parsing as HTTP-date
+		if t, err := http.ParseTime(retryAfter); err == nil {
+			if d := time.Until(t); d > 0 {
+				return d
+			}
+		}
 	}
 
 	// Check retry-after-ms header (non-standard)
