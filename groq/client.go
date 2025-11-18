@@ -407,6 +407,9 @@ func (c *Client) setHeaders(req *http.Request, opts *option.RequestOptions) {
 		for k, v := range opts.Headers {
 			req.Header.Set(k, v)
 		}
+		if opts.IdempotencyKey != "" {
+			req.Header.Set("Idempotency-Key", opts.IdempotencyKey)
+		}
 	}
 }
 

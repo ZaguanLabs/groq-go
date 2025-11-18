@@ -47,3 +47,10 @@ func WithRequestQuery(key, value string) RequestOption {
 		o.QueryParams[key] = value
 	}
 }
+
+// WithIdempotencyKey sets the idempotency key for a request
+func WithIdempotencyKey(key string) RequestOption {
+	return func(o *RequestOptions) {
+		o.IdempotencyKey = key
+	}
+}
