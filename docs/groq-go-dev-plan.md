@@ -824,13 +824,13 @@ type ValidationError struct{ Error }
 
 ### Phase 1: Foundation (Week 1-2)
 **Deliverables**:
-- [ ] Module setup: `go.mod`, directory structure, CI/CD (GitHub Actions)
-- [ ] Core client: `Client`, `ClientConfig`, `NewClient()` with env loading
-- [ ] HTTP client wrapper with default timeouts/limits
-- [ ] Error hierarchy: all error types with proper wrapping
-- [ ] Constants: timeouts, limits, headers
-- [ ] Logging: structured logger interface + env toggle (`GROQ_LOG`)
-- [ ] Unit tests: client initialization, config validation
+- [x] Module setup: `go.mod`, directory structure, CI/CD (GitHub Actions)
+- [x] Core client: `Client`, `ClientConfig`, `NewClient()` with env loading
+- [x] HTTP client wrapper with default timeouts/limits
+- [x] Error hierarchy: all error types with proper wrapping
+- [x] Constants: timeouts, limits, headers
+- [x] Logging: structured logger interface + env toggle (`GROQ_LOG`)
+- [x] Unit tests: client initialization, config validation
 
 ### Phase 2: Request Infrastructure (Week 2-3)
 **Deliverables**:
