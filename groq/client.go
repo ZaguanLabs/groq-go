@@ -12,9 +12,9 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/zaguan/groq-go/chat"
-	"github.com/zaguan/groq-go/internal/retry"
-	"github.com/zaguan/groq-go/option"
+	"github.com/ZaguanLabs/groq-go/groq/chat"
+	"github.com/ZaguanLabs/groq-go/groq/internal/retry"
+	"github.com/ZaguanLabs/groq-go/groq/option"
 )
 
 // Client is the Groq API client

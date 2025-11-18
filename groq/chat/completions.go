@@ -3,7 +3,7 @@ package chat
 import (
 	"context"
 
-	"github.com/zaguan/groq-go/option"
+	"github.com/ZaguanLabs/groq-go/groq/option"
 )
 
 // Requester defines the interface for sending requests
