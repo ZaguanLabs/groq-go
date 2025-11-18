@@ -843,13 +843,13 @@ type ValidationError struct{ Error }
 
 ### Phase 3: Type System (Week 3-4)
 **Deliverables**:
-- [ ] `Optional[T]` generic with JSON marshaling
-- [ ] Chat types: `ChatCompletion`, `ChatCompletionChunk`, message types
-- [ ] Embedding types: `CreateEmbeddingResponse`, `Embedding`
-- [ ] Model types: `Model`, `ModelListResponse`, `ModelDeleted`
-- [ ] Shared types: `ErrorObject`, `FunctionDefinition`, `CompletionUsage`
-- [ ] Enums: `Role`, `FinishReason`, model literals
-- [ ] Unit tests: JSON round-trip, optional field handling
+- [x] `Optional[T]` generic with JSON marshaling
+- [x] Chat types: `ChatCompletion`, `ChatCompletionChunk`, message types
+- [x] Embedding types: `CreateEmbeddingResponse`, `Embedding`
+- [x] Model types: `Model`, `ModelListResponse`, `ModelDeleted`
+- [x] Shared types: `ErrorObject`, `FunctionDefinition`, `CompletionUsage`
+- [x] Enums: `Role`, `FinishReason`, model literals
+- [x] Unit tests: JSON round-trip, optional field handling
 
 ### Phase 4: Chat Completions (Week 4-5)
 **Deliverables**:
