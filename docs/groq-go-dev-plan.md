@@ -863,14 +863,14 @@ type ValidationError struct{ Error }
 
 ### Phase 5: Remaining Resources (Week 5-7)
 **Deliverables**:
-- [ ] Embeddings service
-- [ ] Audio: speech, transcriptions, translations
-- [ ] Models: list, retrieve, delete
-- [ ] Batches: CRUD operations
-- [ ] Files: upload, download, list, delete
-- [ ] Multipart form-data handling
-- [ ] Binary response handling
-- [ ] Integration tests for each resource
+- [x] Embeddings service
+- [x] Audio: speech, transcriptions, translations
+- [x] Models: list, retrieve, delete
+- [x] Batches: CRUD operations
+- [x] Files: upload, download, list, delete
+- [x] Multipart form-data handling
+- [x] Binary response handling
+- [x] Integration tests for each resource
 
 ### Phase 6: Advanced Features (Week 7-8)
 **Deliverables**:

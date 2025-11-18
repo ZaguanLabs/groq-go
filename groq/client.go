@@ -12,9 +12,15 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/ZaguanLabs/groq-go/groq/audio"
+	"github.com/ZaguanLabs/groq-go/groq/batches"
 	"github.com/ZaguanLabs/groq-go/groq/chat"
+	"github.com/ZaguanLabs/groq-go/groq/embeddings"
+	"github.com/ZaguanLabs/groq-go/groq/files"
+	"github.com/ZaguanLabs/groq-go/groq/internal/form"
 	"github.com/ZaguanLabs/groq-go/groq/internal/querystring"
 	"github.com/ZaguanLabs/groq-go/groq/internal/retry"
+	"github.com/ZaguanLabs/groq-go/groq/models"
 	"github.com/ZaguanLabs/groq-go/groq/option"
 )
 
@@ -24,7 +30,12 @@ type Client struct {
 	config     *ClientConfig
 
 	// Resources
-	Chat *chat.Completions
+	Chat       *chat.Completions
+	Embeddings *embeddings.Embeddings
+	Audio      *audio.Audio
+	Models     *models.Models
+	Batches    *batches.Batches
+	Files      *files.Files
 }
 
 // NewClient creates a new Groq API client
@@ -72,6 +83,11 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 
 	// Initialize resources
 	c.Chat = chat.NewCompletions(c)
+	c.Embeddings = embeddings.New(c)
+	c.Audio = audio.New(c)
+	c.Models = models.New(c)
+	c.Batches = batches.New(c)
+	c.Files = files.New(c)
 
 	return c, nil
 }
@@ -182,6 +198,141 @@ func (c *Client) PostStream(ctx context.Context, path string, body interface{}, 
 	}
 
 	return resp, nil
+}
+
+// Get sends a GET request
+func (c *Client) Get(ctx context.Context, path string, result interface{}, opts ...option.RequestOption) error {
+	reqOpts := &option.RequestOptions{
+		Headers:     make(map[string]string),
+		QueryParams: make(map[string]string),
+	}
+	for _, opt := range opts {
+		opt(reqOpts)
+	}
+
+	req, err := c.buildRequest(ctx, http.MethodGet, path, nil, reqOpts)
+	if err != nil {
+		return err
+	}
+
+	return c.execute(ctx, req, result, reqOpts)
+}
+
+// GetStream sends a GET request and returns the raw response
+func (c *Client) GetStream(ctx context.Context, path string, opts ...option.RequestOption) (*http.Response, error) {
+	reqOpts := &option.RequestOptions{
+		Headers:     make(map[string]string),
+		QueryParams: make(map[string]string),
+	}
+	for _, opt := range opts {
+		opt(reqOpts)
+	}
+
+	req, err := c.buildRequest(ctx, http.MethodGet, path, nil, reqOpts)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := c.doWithRetry(ctx, req, reqOpts)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode >= 400 {
+		defer resp.Body.Close()
+		return nil, c.handleError(resp)
+	}
+
+	return resp, nil
+}
+
+// Delete sends a DELETE request
+func (c *Client) Delete(ctx context.Context, path string, result interface{}, opts ...option.RequestOption) error {
+	reqOpts := &option.RequestOptions{
+		Headers:     make(map[string]string),
+		QueryParams: make(map[string]string),
+	}
+	for _, opt := range opts {
+		opt(reqOpts)
+	}
+
+	req, err := c.buildRequest(ctx, http.MethodDelete, path, nil, reqOpts)
+	if err != nil {
+		return err
+	}
+
+	return c.execute(ctx, req, result, reqOpts)
+}
+
+// execute handles the common request execution logic
+func (c *Client) execute(ctx context.Context, req *http.Request, result interface{}, opts *option.RequestOptions) error {
+	resp, err := c.doWithRetry(ctx, req, opts)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 400 {
+		return c.handleError(resp)
+	}
+
+	if c.config.StrictValidation {
+		ct := resp.Header.Get("Content-Type")
+		if !strings.HasPrefix(ct, "application/json") {
+			// Some endpoints might return empty body with 204 No Content
+			if resp.StatusCode != http.StatusNoContent {
+				return &APIError{
+					GroqError: GroqError{
+						Message: fmt.Sprintf("Expected Content-Type application/json, got %s", ct),
+						Request: req,
+					},
+					Response:   resp,
+					StatusCode: resp.StatusCode,
+				}
+			}
+		}
+	}
+
+	if result != nil && resp.StatusCode != http.StatusNoContent {
+		if err := json.NewDecoder(resp.Body).Decode(result); err != nil {
+			return &GroqError{Message: fmt.Sprintf("error decoding response: %v", err)}
+		}
+	}
+
+	return nil
+}
+
+// PostForm sends a POST request with multipart/form-data
+func (c *Client) PostForm(ctx context.Context, path string, formStruct interface{}, result interface{}, opts ...option.RequestOption) error {
+	reqOpts := &option.RequestOptions{
+		Headers:     make(map[string]string),
+		QueryParams: make(map[string]string),
+	}
+	for _, opt := range opts {
+		opt(reqOpts)
+	}
+
+	// Encode form
+	enc := form.NewEncoder()
+	contentType, bodyReader, err := enc.Encode(formStruct)
+	if err != nil {
+		return fmt.Errorf("form encode: %w", err)
+	}
+
+	// Set Content-Type header
+	reqOpts.Headers["Content-Type"] = contentType
+
+	// Build request
+	url := c.buildURL(path, reqOpts)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bodyReader)
+	if err != nil {
+		return err
+	}
+
+	// Set other headers
+	c.setHeaders(req, reqOpts)
+
+	return c.execute(ctx, req, result, reqOpts)
 }
 
 func (c *Client) buildRequest(ctx context.Context, method, path string, body interface{}, opts *option.RequestOptions) (*http.Request, error) {
