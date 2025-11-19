@@ -23,6 +23,14 @@ This release includes:
 - ✅ **135+ Tests** - Comprehensive test suite with 73.5% coverage
 - 🏆 **Production Quality** - A- audit grade (91%)
 
+## 🏭 Production Use
+
+This SDK is **running in production** at [Zaguán](https://zaguanai.com), powering real-world AI applications with proven reliability:
+
+- ✅ **OpenWebUI Integration** - Seamless chat functionality with no issues
+- ✅ **Qwen-Code with Tools** - Full function and tool calling support working flawlessly
+- ✅ **Battle-Tested** - Handling production workloads with confidence
+
 ---
 
 ## 🌟 Why use this SDK?
@@ -199,6 +207,7 @@ See [docs/80_PERCENT_FINAL_STATUS.md](docs/80_PERCENT_FINAL_STATUS.md) for detai
 - [Audit Report](docs/GROQ_GO_AUDIT_REPORT.md) - Comprehensive code audit
 - [Coverage Report](docs/80_PERCENT_FINAL_STATUS.md) - Test coverage details
 - [API Reference](https://pkg.go.dev/github.com/ZaguanLabs/groq-go) - Go package documentation
+- [Finish Reason Investigation](INVESTIGATION_SUMMARY.md) - Analysis of streaming finish_reason behavior
 
 ## 🤝 Contributing
 
