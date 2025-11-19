@@ -83,3 +83,92 @@ func TestStringify(t *testing.T) {
 		})
 	}
 }
+
+func TestStringify_EdgeCases(t *testing.T) {
+	tests := []struct {
+		name    string
+		input   interface{}
+		wantErr bool
+	}{
+		{
+			name:    "empty string",
+			input:   map[string]string{"key": ""},
+			wantErr: false,
+		},
+		{
+			name:    "zero int",
+			input:   map[string]int{"count": 0},
+			wantErr: false,
+		},
+		{
+			name:    "false bool",
+			input:   map[string]bool{"active": false},
+			wantErr: false,
+		},
+		{
+			name:    "empty slice",
+			input:   map[string][]string{"ids": {}},
+			wantErr: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := Stringify(tt.input)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Stringify() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestStringify_ComplexNesting(t *testing.T) {
+	input := map[string]interface{}{
+		"filter": map[string]interface{}{
+			"user": map[string]string{
+				"name": "john",
+			},
+		},
+	}
+
+	result, err := Stringify(input)
+	if err != nil {
+		t.Fatalf("Stringify() error = %v", err)
+	}
+
+	// Should encode nested structure
+	if result == "" {
+		t.Error("Expected non-empty result for nested map")
+	}
+}
+
+func TestStringify_SpecialCharacters(t *testing.T) {
+	input := map[string]string{
+		"query": "hello world",
+		"path":  "/api/v1",
+		"email": "test@example.com",
+	}
+
+	result, err := Stringify(input)
+	if err != nil {
+		t.Fatalf("Stringify() error = %v", err)
+	}
+
+	// Spaces should be encoded
+	if !contains(result, "hello+world") && !contains(result, "hello%20world") {
+		t.Error("Expected spaces to be encoded")
+	}
+}
+
+func contains(s, substr string) bool {
+	return len(s) >= len(substr) && (s == substr || len(s) > len(substr) && (s[:len(substr)] == substr || s[len(s)-len(substr):] == substr || containsMiddle(s, substr)))
+}
+
+func containsMiddle(s, substr string) bool {
+	for i := 0; i <= len(s)-len(substr); i++ {
+		if s[i:i+len(substr)] == substr {
+			return true
+		}
+	}
+	return false
+}

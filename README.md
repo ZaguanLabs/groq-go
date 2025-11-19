@@ -8,23 +8,42 @@ Welcome to the **unofficial** Go client library for the [Groq Cloud API](https:/
 
 This SDK is designed to provide a **strongly-typed**, **idiomatic**, and **robust** experience for Go developers building next-generation AI applications on Groq's blazing-fast LPU™ Inference Engine.
 
-> ⚠️ **Note**: This project is currently in **Beta (v0.2.0-beta)**. The SDK is feature-complete with full Python SDK v0.35.0 parity. APIs are stabilizing as we approach 1.0.
+## ✨ v0.2.0 Release - Production Ready!
+
+**Latest Version:** v0.2.0 (Stable)  
+**Status:** ✅ Production Ready  
+**Test Coverage:** 73.5%  
+**Quality Grade:** A- (91%)
+
+This release includes:
+- 🤖 **Compound AI** - Multi-model orchestration with custom tools
+- 🧠 **Reasoning Models** - Advanced reasoning with configurable effort
+- 📚 **Documents & Citations** - RAG workflows with automatic citations
+- 🔍 **Web Search Integration** - Fine-grained search control
+- ✅ **135+ Tests** - Comprehensive test suite with 73.5% coverage
+- 🏆 **Production Quality** - A- audit grade (91%)
 
 ---
 
 ## 🌟 Why use this SDK?
 
-- **Idiomatic Go**: Built with `context`, functional options, and strict typing in mind.
-- **Complete Coverage**: Supports Chat, Audio, Embeddings, Models, Files, and Batches.
-- **Production Ready**: Built-in exponential backoff retries, rate limit handling, and safe error types.
-- **Streaming First**: Native support for Server-Sent Events (SSE) with easy-to-use iterators.
-- **Precise Control**: Generic `Optional[T]` types allow you to distinguish between zero-values and omitted fields.
+- **🎯 Production Ready**: 73.5% test coverage with 135+ comprehensive tests, A- audit grade
+- **🤖 Advanced AI**: Compound AI, reasoning models, RAG with citations, web search
+- **⚡ Idiomatic Go**: Built with `context`, functional options, and strict typing
+- **📦 Complete Coverage**: Chat, Audio, Embeddings, Models, Files, Batches APIs
+- **🔄 Streaming First**: Native SSE support with easy-to-use iterators
+- **🎛️ Precise Control**: Generic `Optional[T]` types for zero-values vs omitted fields
+- **🛡️ Robust**: Exponential backoff retries, rate limit handling, safe error types
 
 ## 📦 Installation
 
 ```bash
-go get github.com/ZaguanLabs/groq-go/groq
+go get github.com/ZaguanLabs/groq-go@v0.2.0
 ```
+
+**Requirements:**
+- Go 1.21 or higher
+- Valid Groq API key ([Get one here](https://console.groq.com/keys))
 
 ## 🚀 Quickstart
 
@@ -71,25 +90,48 @@ func main() {
 
 ## 📚 Supported APIs
 
-- **Chat Completions**: Standard and streaming support via Server-Sent Events (SSE).
-- **Compound AI**: Multi-model orchestration with custom tool configuration.
-- **Documents & RAG**: Provide documents as context with citation support.
-- **Reasoning Models**: Advanced reasoning with configurable output formats.
-- **Audio**: Speech generation, transcription, and translation.
-- **Embeddings**: Vector generation for text.
-- **Models**: List and retrieve available models.
-- **Files**: Upload, list, and retrieve files.
-- **Batches**: Batch processing operations.
+### Core APIs
+- **Chat Completions** ✅ - Standard and streaming support via SSE (100% tested)
+- **Audio** ✅ - Speech generation, transcription, translation (100% tested)
+- **Embeddings** ✅ - Vector generation for text (100% tested)
+- **Models** ✅ - List and retrieve available models (100% tested)
+- **Files** ✅ - Upload, list, and retrieve files (100% tested)
+- **Batches** ✅ - Batch processing operations (100% tested)
+
+### Advanced Features (New in v0.2.0)
+- **Compound AI** 🆕 - Multi-model orchestration with custom tools
+- **Reasoning Models** 🆕 - Advanced reasoning with configurable effort levels
+- **Documents & RAG** 🆕 - Document context with automatic citations
+- **Web Search** 🆕 - Fine-grained search control with domain filtering
+- **Enhanced Streaming** 🆕 - Complete metadata and usage breakdown
 
 ## 💡 Examples
 
 Check the [groq/examples/](groq/examples/) directory for runnable examples:
 
 - [Chat Completion](groq/examples/chat_completion/main.go) - Basic chat completion
-- [Streaming Chat](groq/examples/streaming/main.go) - Streaming responses
-- [Compound AI](groq/examples/compound_ai/main.go) - Multi-model workflows with tools
-- [Documents & RAG](groq/examples/documents_rag/main.go) - Document-based context with citations
-- [Reasoning Models](groq/examples/reasoning/main.go) - Advanced reasoning capabilities
+- [Streaming Chat](groq/examples/streaming/main.go) - Streaming responses with SSE
+- [Compound AI](groq/examples/compound_ai/main.go) 🆕 - Multi-model workflows with tools
+- [Documents & RAG](groq/examples/documents_rag/main.go) 🆕 - Document-based Q&A with citations
+- [Reasoning Models](groq/examples/reasoning/main.go) 🆕 - Advanced reasoning capabilities
+
+### Quick Example: Compound AI
+
+```go
+resp, err := client.Chat.Create(ctx, &types.CreateChatCompletionRequest{
+    Model: types.ModelCompoundCustom,
+    Messages: []types.ChatCompletionMessage{
+        {Role: "user", Content: option.Some("Explain quantum computing")},
+    },
+    CompoundCustom: option.Ptr(option.Some(types.CompoundCustom{
+        AnsweringModel: option.Some("llama-3.3-70b-versatile"),
+        ReasoningModel: option.Some("llama-3.1-70b-versatile"),
+    })),
+    CompoundCustomTools: option.Ptr(option.Some(types.CompoundCustomTools{
+        WebSearch: option.Some(true),
+    })),
+})
+```
 
 ## Advanced Usage
 
@@ -139,6 +181,25 @@ client.Chat.Create(ctx, req,
 - `groq/option/`: Functional options and Optional type
 - `groq/chat/`, `groq/audio/`, etc.: Resource-specific packages
 
+## 📊 Quality & Testing
+
+**v0.2.0 Quality Metrics:**
+- ✅ **73.5% Test Coverage** (up from 38.9%)
+- ✅ **135+ Comprehensive Tests**
+- ✅ **100% Coverage** on all 6 resource packages
+- ✅ **A- Audit Grade** (91%)
+- ✅ **Zero Race Conditions**
+- ✅ **100% Test Pass Rate**
+
+See [docs/80_PERCENT_FINAL_STATUS.md](docs/80_PERCENT_FINAL_STATUS.md) for detailed coverage report.
+
+## 📖 Documentation
+
+- [Release Notes](docs/RELEASE_v0.2.0.md) - Full v0.2.0 release documentation
+- [Audit Report](docs/GROQ_GO_AUDIT_REPORT.md) - Comprehensive code audit
+- [Coverage Report](docs/80_PERCENT_FINAL_STATUS.md) - Test coverage details
+- [API Reference](https://pkg.go.dev/github.com/ZaguanLabs/groq-go) - Go package documentation
+
 ## 🤝 Contributing
 
 Contributions are strictly encouraged! We love the open source community.
@@ -148,6 +209,12 @@ Contributions are strictly encouraged! We love the open source community.
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+**Testing Requirements:**
+- All new features must include tests
+- Maintain or improve test coverage
+- All tests must pass (`go test ./...`)
+- No race conditions (`go test -race ./...`)
 
 ## 📄 License
 

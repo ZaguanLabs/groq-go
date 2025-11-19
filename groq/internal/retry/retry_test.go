@@ -1,7 +1,10 @@
 package retry
 
 import (
+	"context"
+	"errors"
 	"net/http"
+	"net/url"
 	"testing"
 	"time"
 )
@@ -94,5 +97,144 @@ func TestDefaultShouldRetry(t *testing.T) {
 		if got := DefaultShouldRetry(resp); got != tt.want {
 			t.Errorf("DefaultShouldRetry(%d, %s) = %v, want %v", tt.status, tt.retry, got, tt.want)
 		}
+	}
+}
+
+func TestDo_Success(t *testing.T) {
+	ctx := context.Background()
+	attempts := 0
+
+	cfg := Config{
+		MaxRetries:  3,
+		ShouldRetry: DefaultShouldRetry,
+	}
+
+	resp, err := Do(ctx, cfg, func() (*http.Response, error) {
+		attempts++
+		return &http.Response{StatusCode: 200}, nil
+	})
+
+	if err != nil {
+		t.Fatalf("Do() error = %v", err)
+	}
+	if resp.StatusCode != 200 {
+		t.Errorf("StatusCode = %d, want 200", resp.StatusCode)
+	}
+	if attempts != 1 {
+		t.Errorf("attempts = %d, want 1", attempts)
+	}
+}
+
+func TestDo_RetryOnce(t *testing.T) {
+	ctx := context.Background()
+	attempts := 0
+
+	cfg := Config{
+		MaxRetries:  3,
+		ShouldRetry: DefaultShouldRetry,
+	}
+
+	resp, err := Do(ctx, cfg, func() (*http.Response, error) {
+		attempts++
+		if attempts == 1 {
+			return &http.Response{StatusCode: 500, Header: make(http.Header)}, nil
+		}
+		return &http.Response{StatusCode: 200}, nil
+	})
+
+	if err != nil {
+		t.Fatalf("Do() error = %v", err)
+	}
+	if resp.StatusCode != 200 {
+		t.Errorf("StatusCode = %d, want 200", resp.StatusCode)
+	}
+	if attempts != 2 {
+		t.Errorf("attempts = %d, want 2", attempts)
+	}
+}
+
+func TestDo_MaxRetriesExceeded(t *testing.T) {
+	ctx := context.Background()
+	attempts := 0
+
+	cfg := Config{
+		MaxRetries:  2,
+		ShouldRetry: DefaultShouldRetry,
+	}
+
+	resp, err := Do(ctx, cfg, func() (*http.Response, error) {
+		attempts++
+		return &http.Response{StatusCode: 500, Header: make(http.Header)}, nil
+	})
+
+	if err != nil {
+		t.Fatalf("Do() error = %v", err)
+	}
+	if resp.StatusCode != 500 {
+		t.Errorf("StatusCode = %d, want 500", resp.StatusCode)
+	}
+	// MaxRetries=2 means 3 total attempts (initial + 2 retries)
+	if attempts != 3 {
+		t.Errorf("attempts = %d, want 3", attempts)
+	}
+}
+
+func TestDo_NetworkError(t *testing.T) {
+	ctx := context.Background()
+
+	cfg := Config{
+		MaxRetries:  3,
+		ShouldRetry: DefaultShouldRetry,
+	}
+
+	_, err := Do(ctx, cfg, func() (*http.Response, error) {
+		return nil, &url.Error{Op: "Get", URL: "http://test", Err: errors.New("connection refused")}
+	})
+
+	if err == nil {
+		t.Fatal("Do() expected error, got nil")
+	}
+}
+
+func TestDo_ContextCancellation(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel() // Cancel immediately
+
+	cfg := Config{
+		MaxRetries:  3,
+		ShouldRetry: DefaultShouldRetry,
+	}
+
+	_, err := Do(ctx, cfg, func() (*http.Response, error) {
+		return &http.Response{StatusCode: 500, Header: make(http.Header)}, nil
+	})
+
+	if err == nil {
+		t.Fatal("Do() expected context error, got nil")
+	}
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("expected context.Canceled, got %v", err)
+	}
+}
+
+func TestCalculateBackoff_MaxDelay(t *testing.T) {
+	// Test that backoff doesn't exceed max delay
+	resp := &http.Response{Header: make(http.Header)}
+
+	// Attempt 10 should be capped at MaxDelay
+	delay := CalculateBackoff(10, resp)
+	if delay > MaxDelay {
+		t.Errorf("CalculateBackoff(10) = %v, want <= %v", delay, MaxDelay)
+	}
+}
+
+func TestCalculateBackoff_InvalidRetryAfter(t *testing.T) {
+	resp := &http.Response{Header: make(http.Header)}
+	resp.Header.Set("Retry-After", "invalid")
+
+	// Should fall back to exponential backoff
+	delay := CalculateBackoff(0, resp)
+	if delay < 375*time.Millisecond || delay > 500*time.Millisecond {
+		t.Errorf("CalculateBackoff with invalid Retry-After = %v, want exponential backoff", delay)
 	}
 }
