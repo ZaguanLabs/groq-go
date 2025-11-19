@@ -8,7 +8,7 @@ Welcome to the **unofficial** Go client library for the [Groq Cloud API](https:/
 
 This SDK is designed to provide a **strongly-typed**, **idiomatic**, and **robust** experience for Go developers building next-generation AI applications on Groq's blazing-fast LPU™ Inference Engine.
 
-> ⚠️ **Note**: This project is currently in **Alpha (v0.1.0)**. While strictly tested, APIs may evolve as we reach 1.0 stability.
+> ⚠️ **Note**: This project is currently in **Beta (v0.2.0-beta)**. The SDK is feature-complete with full Python SDK v0.35.0 parity. APIs are stabilizing as we approach 1.0.
 
 ---
 
