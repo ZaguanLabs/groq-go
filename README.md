@@ -72,6 +72,9 @@ func main() {
 ## 📚 Supported APIs
 
 - **Chat Completions**: Standard and streaming support via Server-Sent Events (SSE).
+- **Compound AI**: Multi-model orchestration with custom tool configuration.
+- **Documents & RAG**: Provide documents as context with citation support.
+- **Reasoning Models**: Advanced reasoning with configurable output formats.
 - **Audio**: Speech generation, transcription, and translation.
 - **Embeddings**: Vector generation for text.
 - **Models**: List and retrieve available models.
@@ -82,8 +85,11 @@ func main() {
 
 Check the [groq/examples/](groq/examples/) directory for runnable examples:
 
-- [Chat Completion](groq/examples/chat_completion/main.go)
-- [Streaming Chat](groq/examples/streaming/main.go)
+- [Chat Completion](groq/examples/chat_completion/main.go) - Basic chat completion
+- [Streaming Chat](groq/examples/streaming/main.go) - Streaming responses
+- [Compound AI](groq/examples/compound_ai/main.go) - Multi-model workflows with tools
+- [Documents & RAG](groq/examples/documents_rag/main.go) - Document-based context with citations
+- [Reasoning Models](groq/examples/reasoning/main.go) - Advanced reasoning capabilities
 
 ## Advanced Usage
 

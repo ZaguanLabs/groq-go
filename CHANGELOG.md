@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-11-19
+
+### Added
+- **Compound AI Support**: Multi-model orchestration with custom model selection and tool configuration
+  - `CompoundCustom` type for configuring answering and reasoning models
+  - `CompoundCustomTools` for enabling web search, code interpreter, and Wolfram tools
+  - `ExecutedTool` types for browser, code, and search results
+- **Enhanced Streaming Metadata**: `XGroq` field in streaming responses
+  - Request ID tracking
+  - Debug information (token IDs and strings)
+  - Per-model usage breakdown for compound AI
+  - Error reporting in streams
+- **Documents & Citations**: RAG-like workflows with citation support
+  - `Document` type for providing text or JSON context
+  - `Annotation` types for document and function citations
+  - `CitationOptions` parameter for enabling citations
+- **Reasoning Model Support**: Advanced reasoning capabilities
+  - `ReasoningEffort` parameter (none, default, low, medium, high)
+  - `ReasoningFormat` parameter (hidden, raw, parsed)
+  - `IncludeReasoning` flag
+  - `Reasoning` field in responses
+- **Search Settings**: Fine-grained web search control
+  - Country-specific search
+  - Domain filtering (include/exclude)
+  - Image inclusion
+- **New Request Parameters**:
+  - `MaxCompletionTokens` for token limit control
+  - `ServiceTier` for tier selection (auto, on_demand, flex, performance)
+  - `DisableToolValidation` flag
+  - `Metadata` and `Store` fields (future support)
+- **New Model Constants**: Added 9 new model identifiers including Compound AI, Llama 4, Kimi, GPT-OSS, and Qwen models
+- **Examples**: Added comprehensive examples for Compound AI, Documents/RAG, and Reasoning models
+
+### Changed
+- Enhanced `ChatCompletionMessage` and `ChatCompletionChunkDelta` with new fields
+- Improved `XGroq` type with complete metadata structure
+- Updated streaming responses to include usage breakdown
+
 ## [0.1.0] - 2025-11-18
 
 ### Added
