@@ -127,10 +127,9 @@ type ChatCompletionChunkDelta struct {
 }
 
 // ChatCompletionMessageParam represents an input message
-// We use a struct with pointers for optional fields to support omitempty correctly via standard json
-// or just strict fields.
-// But wait, Content can be []ContentPart for vision.
-// For now, let's assume text content.
+// Content can be:
+// - string for simple text messages
+// - []ContentPart for multimodal messages (text, images, documents)
 type ChatCompletionMessageParam struct {
 	Role       Role        `json:"role"`
 	Content    interface{} `json:"content"` // string or []ContentPart

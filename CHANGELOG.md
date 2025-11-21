@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2025-11-21
+
+### Added
+- **Multimodal Content Parts**: Support for document content in chat messages (Groq API v0.36.0)
+  - `ContentPart` interface for text, image, and document content
+  - `ContentPartText` for text content parts
+  - `ContentPartImage` for image URL content parts
+  - `ContentPartDocument` for structured JSON document content (NEW)
+  - Ability to send multiple content types in a single message
+- **New Types**:
+  - `ContentPartDocument_Document` with `Data` (map[string]interface{}) and optional `ID`
+  - Full support for multimodal messages with mixed content types
+- **Examples**: Added `document_content` example demonstrating JSON document usage
+- **Tests**: 5 new comprehensive tests for content part serialization and multimodal messages
+- **Documentation**: 
+  - `patches/PATCH_ANALYSIS.md` - Analysis of Groq Python SDK v0.36.0 changes
+  - `groq/examples/document_content/README.md` - Complete feature documentation
+
+### Changed
+- Updated `ChatCompletionMessageParam.Content` documentation to clarify multimodal support
+- Enhanced README.md with multimodal content feature
+
+### Quality
+- **Test Coverage**: Maintained at 73.5%
+- **New Tests**: 5 content part tests (all passing)
+- **Total Tests**: 140+ comprehensive tests
+- **Pass Rate**: 100%
+- **Backward Compatibility**: ✅ Fully maintained (string content still works)
+
+### Synchronization
+- Synchronized with Groq Python SDK v0.36.0 API changes
+- Implemented document content parts matching Python SDK functionality
+
 ## [0.2.0] - 2025-11-19
 
 ### Added

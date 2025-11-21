@@ -8,9 +8,9 @@ Welcome to the **unofficial** Go client library for the [Groq Cloud API](https:/
 
 This SDK is designed to provide a **strongly-typed**, **idiomatic**, and **robust** experience for Go developers building next-generation AI applications on Groq's blazing-fast LPU™ Inference Engine.
 
-## ✨ v0.2.0 Release - Production Ready!
+## ✨ v0.2.1 Release - Multimodal Content Support!
 
-**Latest Version:** v0.2.0 (Stable)  
+**Latest Version:** v0.2.1 (Stable)  
 **Status:** ✅ Production Ready  
 **Test Coverage:** 73.5%  
 **Quality Grade:** A- (91%)
@@ -20,7 +20,8 @@ This release includes:
 - 🧠 **Reasoning Models** - Advanced reasoning with configurable effort
 - 📚 **Documents & Citations** - RAG workflows with automatic citations
 - 🔍 **Web Search Integration** - Fine-grained search control
-- ✅ **135+ Tests** - Comprehensive test suite with 73.5% coverage
+- 🎨 **Multimodal Content** - Text, image, and document content parts (NEW in v0.2.1)
+- ✅ **140+ Tests** - Comprehensive test suite with 73.5% coverage
 - 🏆 **Production Quality** - A- audit grade (91%)
 
 ## 🏭 Production Use
@@ -35,7 +36,7 @@ This SDK is **running in production** at [Zaguán](https://zaguanai.com), poweri
 
 ## 🌟 Why use this SDK?
 
-- **🎯 Production Ready**: 73.5% test coverage with 135+ comprehensive tests, A- audit grade
+- **🎯 Production Ready**: 73.5% test coverage with 140+ comprehensive tests, A- audit grade
 - **🤖 Advanced AI**: Compound AI, reasoning models, RAG with citations, web search
 - **⚡ Idiomatic Go**: Built with `context`, functional options, and strict typing
 - **📦 Complete Coverage**: Chat, Audio, Embeddings, Models, Files, Batches APIs
@@ -46,7 +47,7 @@ This SDK is **running in production** at [Zaguán](https://zaguanai.com), poweri
 ## 📦 Installation
 
 ```bash
-go get github.com/ZaguanLabs/groq-go@v0.2.0
+go get github.com/ZaguanLabs/groq-go@v0.2.1
 ```
 
 **Requirements:**
@@ -112,6 +113,7 @@ func main() {
 - **Documents & RAG** 🆕 - Document context with automatic citations
 - **Web Search** 🆕 - Fine-grained search control with domain filtering
 - **Enhanced Streaming** 🆕 - Complete metadata and usage breakdown
+- **Multimodal Content** 🆕 - Text, image, and document content parts (v0.36.0 API)
 
 ## 💡 Examples
 
@@ -122,6 +124,7 @@ Check the [groq/examples/](groq/examples/) directory for runnable examples:
 - [Compound AI](groq/examples/compound_ai/main.go) 🆕 - Multi-model workflows with tools
 - [Documents & RAG](groq/examples/documents_rag/main.go) 🆕 - Document-based Q&A with citations
 - [Reasoning Models](groq/examples/reasoning/main.go) 🆕 - Advanced reasoning capabilities
+- [Document Content](groq/examples/document_content/main.go) 🆕 - Multimodal messages with JSON documents
 
 ### Quick Example: Compound AI
 
