@@ -31,6 +31,7 @@ go.work.sum
 # .idea/
 # .vscode/
 
-docs/groq-0*
-docs/*.tar.gz
+/docs/groq-*
+/docs/*.tar.gz
 /patches
+/tmp

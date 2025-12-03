@@ -19,7 +19,8 @@ type CreateSpeechRequest struct {
 	Model          string                    `json:"model"`
 	Input          string                    `json:"input"`
 	Voice          string                    `json:"voice"`
-	ResponseFormat *option.Optional[string]  `json:"response_format,omitempty"` // mp3, opus, aac, flac
+	ResponseFormat *option.Optional[string]  `json:"response_format,omitempty"` // flac, mp3, mulaw, ogg, wav
+	SampleRate     *option.Optional[int]     `json:"sample_rate,omitempty"`     // 8000, 16000, 22050, 24000, 32000, 44100, 48000
 	Speed          *option.Optional[float64] `json:"speed,omitempty"`
 }
 
@@ -31,9 +32,10 @@ type CreateTranscriptionRequest struct {
 	Model                  string                    `json:"model"`
 	Language               *option.Optional[string]  `json:"language,omitempty"`
 	Prompt                 *option.Optional[string]  `json:"prompt,omitempty"`
-	ResponseFormat         *option.Optional[string]  `json:"response_format,omitempty"` // json, text, srt, verbose_json, vtt
+	ResponseFormat         *option.Optional[string]  `json:"response_format,omitempty"` // json, text, verbose_json
 	Temperature            *option.Optional[float64] `json:"temperature,omitempty"`
-	TimestampGranularities []string                  `json:"timestamp_granularities[],omitempty"` // array in query/form?
+	TimestampGranularities []string                  `json:"timestamp_granularities[],omitempty"` // word, segment
+	URL                    *option.Optional[string]  `json:"url,omitempty"`                       // Audio URL (supports Base64URL), required for Batch API
 }
 
 // CreateTranslationRequest represents request parameters for translation

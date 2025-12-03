@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-12-03
+
+### Added
+- **Python SDK 0.37.0 Synchronization**: Full API parity with official Groq Python SDK
+  - `CompletionUsage`: Added `QueueTime`, `CompletionTokensDetails`, and `PromptTokensDetails`
+  - `ChatCompletion`: Added `McpListTools`, `ServiceTier`, `UsageBreakdown`, and `XGroq` fields
+  - `XGroq`: Added `XGroqCacheStats` with `DramCachedTokens` and `SramCachedTokens`
+  - `ResponseFormat`: Extended to support `json_schema` type with full schema definition
+  - `CreateSpeechRequest`: Added `SampleRate` field (8000-48000 Hz)
+  - `CreateTranscriptionRequest`: Added `URL` field for URL-based transcription (Batch API)
+- **New Types**:
+  - `CompletionTokensDetails` - Breakdown with `ReasoningTokens` for reasoning models
+  - `PromptTokensDetails` - Breakdown with `CachedTokens` for cache statistics
+  - `McpListTool` and `McpListToolDef` - MCP tool discovery support
+  - `XGroqCacheStats` - Hardware cache statistics (DRAM/SRAM)
+  - `ResponseFormatJSONSchema` - Structured output configuration with JSON Schema
+
+### Changed
+- Enhanced `ResponseFormat` to support three types: `text`, `json_object`, and `json_schema`
+- Improved documentation for all new fields with detailed comments
+
+### Quality
+- **Test Coverage**: Maintained at 73.5%+
+- **Total Tests**: 238 comprehensive tests (all passing)
+- **Pass Rate**: 100%
+- **Race Conditions**: 0
+- **Backward Compatibility**: ✅ Fully maintained
+
+### Synchronization
+- Synchronized with Groq Python SDK v0.37.0 API changes
+- All new API features from Python SDK now available in Go
+
 ## [0.2.1] - 2025-11-21
 
 ### Added

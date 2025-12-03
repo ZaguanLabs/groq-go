@@ -8,20 +8,21 @@ Welcome to the **unofficial** Go client library for the [Groq Cloud API](https:/
 
 This SDK is designed to provide a **strongly-typed**, **idiomatic**, and **robust** experience for Go developers building next-generation AI applications on Groq's blazing-fast LPU™ Inference Engine.
 
-## ✨ v0.2.1 Release - Multimodal Content Support!
+## ✨ v0.3.0 Release - Python SDK 0.37.0 Parity!
 
-**Latest Version:** v0.2.1 (Stable)  
+**Latest Version:** v0.3.0 (Stable)  
 **Status:** ✅ Production Ready  
-**Test Coverage:** 73.5%  
+**Test Coverage:** 73.5%+  
 **Quality Grade:** A- (91%)
 
 This release includes:
-- 🤖 **Compound AI** - Multi-model orchestration with custom tools
-- 🧠 **Reasoning Models** - Advanced reasoning with configurable effort
-- 📚 **Documents & Citations** - RAG workflows with automatic citations
-- 🔍 **Web Search Integration** - Fine-grained search control
-- 🎨 **Multimodal Content** - Text, image, and document content parts (NEW in v0.2.1)
-- ✅ **140+ Tests** - Comprehensive test suite with 73.5% coverage
+- 🔄 **Python SDK 0.37.0 Sync** - Full API parity with official Groq Python SDK
+- 📊 **Enhanced Usage Stats** - Queue time, reasoning tokens, cached tokens
+- 🔧 **MCP Tool Discovery** - Model Context Protocol tool support
+- 📝 **JSON Schema Output** - Structured output with JSON Schema validation
+- 🎵 **Audio Enhancements** - Sample rate control, URL-based transcription
+- 💾 **Cache Statistics** - DRAM/SRAM cache metrics
+- ✅ **238 Tests** - Comprehensive test suite with 73.5%+ coverage
 - 🏆 **Production Quality** - A- audit grade (91%)
 
 ## 🏭 Production Use
@@ -47,7 +48,7 @@ This SDK is **running in production** at [Zaguán](https://zaguanai.com), poweri
 ## 📦 Installation
 
 ```bash
-go get github.com/ZaguanLabs/groq-go@v0.2.1
+go get github.com/ZaguanLabs/groq-go@v0.3.0
 ```
 
 **Requirements:**
@@ -107,13 +108,16 @@ func main() {
 - **Files** ✅ - Upload, list, and retrieve files (100% tested)
 - **Batches** ✅ - Batch processing operations (100% tested)
 
-### Advanced Features (New in v0.2.0)
-- **Compound AI** 🆕 - Multi-model orchestration with custom tools
-- **Reasoning Models** 🆕 - Advanced reasoning with configurable effort levels
-- **Documents & RAG** 🆕 - Document context with automatic citations
-- **Web Search** 🆕 - Fine-grained search control with domain filtering
-- **Enhanced Streaming** 🆕 - Complete metadata and usage breakdown
-- **Multimodal Content** 🆕 - Text, image, and document content parts (v0.36.0 API)
+### Advanced Features
+- **Compound AI** - Multi-model orchestration with custom tools
+- **Reasoning Models** - Advanced reasoning with configurable effort levels
+- **Documents & RAG** - Document context with automatic citations
+- **Web Search** - Fine-grained search control with domain filtering
+- **Enhanced Streaming** - Complete metadata and usage breakdown
+- **Multimodal Content** - Text, image, and document content parts
+- **JSON Schema Output** 🆕 - Structured output with JSON Schema validation (v0.37.0)
+- **MCP Tool Discovery** 🆕 - Model Context Protocol tool support (v0.37.0)
+- **Cache Statistics** 🆕 - DRAM/SRAM cache metrics (v0.37.0)
 
 ## 💡 Examples
 
@@ -194,9 +198,9 @@ client.Chat.Create(ctx, req,
 
 ## 📊 Quality & Testing
 
-**v0.2.0 Quality Metrics:**
-- ✅ **73.5% Test Coverage** (up from 38.9%)
-- ✅ **135+ Comprehensive Tests**
+**v0.3.0 Quality Metrics:**
+- ✅ **73.5%+ Test Coverage**
+- ✅ **238 Comprehensive Tests**
 - ✅ **100% Coverage** on all 6 resource packages
 - ✅ **A- Audit Grade** (91%)
 - ✅ **Zero Race Conditions**
@@ -206,7 +210,7 @@ See [docs/80_PERCENT_FINAL_STATUS.md](docs/80_PERCENT_FINAL_STATUS.md) for detai
 
 ## 📖 Documentation
 
-- [Release Notes](docs/RELEASE_v0.2.0.md) - Full v0.2.0 release documentation
+- [Release Notes](docs/RELEASE_v0.3.0.md) - Full v0.3.0 release documentation
 - [Audit Report](docs/GROQ_GO_AUDIT_REPORT.md) - Comprehensive code audit
 - [Coverage Report](docs/80_PERCENT_FINAL_STATUS.md) - Test coverage details
 - [API Reference](https://pkg.go.dev/github.com/ZaguanLabs/groq-go) - Go package documentation

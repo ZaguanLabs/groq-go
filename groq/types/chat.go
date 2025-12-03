@@ -13,6 +13,26 @@ type ChatCompletion struct {
 	SystemFingerprint string                 `json:"system_fingerprint,omitempty"`
 	Object            string                 `json:"object"`
 	Usage             *CompletionUsage       `json:"usage,omitempty"`
+	McpListTools      []McpListTool          `json:"mcp_list_tools,omitempty"`  // MCP tool discovery
+	ServiceTier       string                 `json:"service_tier,omitempty"`    // Service tier used (auto, on_demand, flex, performance)
+	UsageBreakdown    *UsageBreakdown        `json:"usage_breakdown,omitempty"` // Per-model usage for compound AI
+	XGroq             *XGroq                 `json:"x_groq,omitempty"`          // Groq-specific metadata
+}
+
+// McpListTool represents MCP tool discovery information
+type McpListTool struct {
+	ID          string           `json:"id,omitempty"`
+	ServerLabel string           `json:"server_label,omitempty"`
+	Tools       []McpListToolDef `json:"tools,omitempty"`
+	Type        string           `json:"type,omitempty"`
+}
+
+// McpListToolDef represents a single MCP tool definition
+type McpListToolDef struct {
+	Annotations interface{}            `json:"annotations,omitempty"` // Additional metadata
+	Description string                 `json:"description,omitempty"`
+	InputSchema map[string]interface{} `json:"input_schema,omitempty"` // JSON Schema
+	Name        string                 `json:"name,omitempty"`
 }
 
 // ChatCompletionChoice represents a choice in a chat completion
@@ -82,9 +102,16 @@ type XGroq struct {
 	ID             *string          `json:"id,omitempty"`
 	Debug          *XGroqDebug      `json:"debug,omitempty"`
 	Seed           *int             `json:"seed,omitempty"`
-	Usage          *CompletionUsage `json:"usage,omitempty"`
-	UsageBreakdown *UsageBreakdown  `json:"usage_breakdown,omitempty"`
+	Usage          *CompletionUsage `json:"usage,omitempty"`           // Usage in streaming final chunk
+	UsageBreakdown *UsageBreakdown  `json:"usage_breakdown,omitempty"` // Per-model usage breakdown
 	Error          *string          `json:"error,omitempty"`
+	CacheStats     *XGroqCacheStats `json:"cache_stats,omitempty"` // Hardware cache statistics (non-streaming)
+}
+
+// XGroqCacheStats represents Groq-specific hardware cache statistics
+type XGroqCacheStats struct {
+	DramCachedTokens int `json:"dram_cached_tokens,omitempty"` // Tokens served from DRAM cache
+	SramCachedTokens int `json:"sram_cached_tokens,omitempty"` // Tokens served from SRAM cache
 }
 
 // XGroqDebug represents debug information
@@ -188,8 +215,18 @@ type CreateChatCompletionRequest struct {
 }
 
 // ResponseFormat represents the response format
+// Type can be "text", "json_object", or "json_schema"
 type ResponseFormat struct {
-	Type string `json:"type"` // "text" or "json_object"
+	Type       string                    `json:"type"`                  // "text", "json_object", or "json_schema"
+	JSONSchema *ResponseFormatJSONSchema `json:"json_schema,omitempty"` // Required when type is "json_schema"
+}
+
+// ResponseFormatJSONSchema represents structured output configuration
+type ResponseFormatJSONSchema struct {
+	Name        string                 `json:"name"`                  // Schema name (a-z, A-Z, 0-9, underscores, dashes, max 64 chars)
+	Description string                 `json:"description,omitempty"` // Description of the response format
+	Schema      map[string]interface{} `json:"schema,omitempty"`      // JSON Schema object
+	Strict      *bool                  `json:"strict,omitempty"`      // Enable strict schema adherence
 }
 
 // ChatCompletionTool represents a tool definition
