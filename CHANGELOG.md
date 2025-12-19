@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2025-12-19
+
+### Added
+- **Python SDK v1.0.0 Synchronization**: Updated to match official Groq Python SDK v1.0.0
+  - `ChatCompletionMessageParam`: Added `FunctionCall` and `Reasoning` fields for assistant messages
+  - `CreateChatCompletionRequest`: Added deprecated `Functions` and `FunctionCall` parameters for backward compatibility
+
+### Changed
+- **XGroq Structure Refactored**: Split into separate types for streaming and non-streaming responses
+  - `XGroq` (non-streaming): Contains `ID`, `Debug`, `Seed`, and `Usage` (with hardware cache stats)
+  - `XGroqStream` (streaming): Contains `ID`, `Debug`, `Seed`, `Usage` (CompletionUsage), `UsageBreakdown`, and `Error`
+  - `XGroqUsage`: Now contains `DramCachedTokens` and `SramCachedTokens` directly (matching Python SDK structure)
+- Removed `XGroqCacheStats` type (merged into `XGroqUsage`)
+- `ChatCompletionChunk.XGroq` now uses `*XGroqStream` type
+
+### Quality
+- **Test Coverage**: All tests passing
+- **Backward Compatibility**: ⚠️ Breaking change for code accessing `XGroq.CacheStats` - now use `XGroq.Usage.DramCachedTokens`/`SramCachedTokens`
+
+### Synchronization
+- Synchronized with Groq Python SDK v1.0.0 API changes
+- Aligned XGroq metadata structure with Python SDK
+
 ## [0.3.0] - 2025-12-03
 
 ### Added

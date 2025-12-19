@@ -8,21 +8,23 @@ Welcome to the **unofficial** Go client library for the [Groq Cloud API](https:/
 
 This SDK is designed to provide a **strongly-typed**, **idiomatic**, and **robust** experience for Go developers building next-generation AI applications on Groq's blazing-fast LPU™ Inference Engine.
 
-## ✨ v0.3.0 Release - Python SDK 0.37.0 Parity!
+## ✨ v1.0.0 Release - Python SDK v1.0.0 Parity!
 
-**Latest Version:** v0.3.0 (Stable)  
+**Latest Version:** v1.0.0 (Stable)  
 **Status:** ✅ Production Ready  
 **Test Coverage:** 73.5%+  
 **Quality Grade:** A- (91%)
 
-This release includes:
-- 🔄 **Python SDK 0.37.0 Sync** - Full API parity with official Groq Python SDK
+This major release includes:
+- 🎯 **Python SDK v1.0.0 Sync** - Complete API parity with official Groq Python SDK v1.0.0
+- 🏗️ **XGroq Structure Refactored** - Aligned with Python SDK for streaming/non-streaming responses
+- 🤖 **Enhanced Assistant Messages** - Added FunctionCall and Reasoning fields
 - 📊 **Enhanced Usage Stats** - Queue time, reasoning tokens, cached tokens
 - 🔧 **MCP Tool Discovery** - Model Context Protocol tool support
 - 📝 **JSON Schema Output** - Structured output with JSON Schema validation
 - 🎵 **Audio Enhancements** - Sample rate control, URL-based transcription
 - 💾 **Cache Statistics** - DRAM/SRAM cache metrics
-- ✅ **238 Tests** - Comprehensive test suite with 73.5%+ coverage
+- ✅ **238+ Tests** - Comprehensive test suite with 73.5%+ coverage
 - 🏆 **Production Quality** - A- audit grade (91%)
 
 ## 🏭 Production Use

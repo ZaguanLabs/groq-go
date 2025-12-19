@@ -7,7 +7,7 @@ import (
 
 const (
 	// Version is the current version of the SDK
-	Version = "0.3.0"
+	Version = "1.0.0"
 
 	// DefaultBaseURL is the default API endpoint
 	DefaultBaseURL = "https://api.groq.com"

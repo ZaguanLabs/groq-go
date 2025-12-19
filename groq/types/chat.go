@@ -90,28 +90,32 @@ type ChatCompletionChunk struct {
 	Model             string                      `json:"model"`
 	SystemFingerprint string                      `json:"system_fingerprint,omitempty"`
 	Object            string                      `json:"object"`
-	Usage             *CompletionUsage            `json:"usage,omitempty"`  // Optional in chunks? Yes, usually final chunk.
-	XGroq             *XGroqUsage                 `json:"x_groq,omitempty"` // Groq specific usage in stream?
+	Usage             *CompletionUsage            `json:"usage,omitempty"`  // Only in final chunk when stream_options.include_usage is true
+	XGroq             *XGroqStream                `json:"x_groq,omitempty"` // Groq-specific metadata in streaming responses
 }
 
-// XGroqUsage represents Groq specific usage info (legacy name, keeping for compatibility)
-type XGroqUsage = XGroq
-
-// XGroq represents Groq-specific metadata in responses
+// XGroq represents Groq-specific metadata in non-streaming responses
 type XGroq struct {
-	ID             *string          `json:"id,omitempty"`
-	Debug          *XGroqDebug      `json:"debug,omitempty"`
-	Seed           *int             `json:"seed,omitempty"`
-	Usage          *CompletionUsage `json:"usage,omitempty"`           // Usage in streaming final chunk
-	UsageBreakdown *UsageBreakdown  `json:"usage_breakdown,omitempty"` // Per-model usage breakdown
-	Error          *string          `json:"error,omitempty"`
-	CacheStats     *XGroqCacheStats `json:"cache_stats,omitempty"` // Hardware cache statistics (non-streaming)
+	ID    string      `json:"id"`
+	Debug *XGroqDebug `json:"debug,omitempty"`
+	Seed  *int        `json:"seed,omitempty"`
+	Usage *XGroqUsage `json:"usage,omitempty"` // Hardware cache statistics
 }
 
-// XGroqCacheStats represents Groq-specific hardware cache statistics
-type XGroqCacheStats struct {
-	DramCachedTokens int `json:"dram_cached_tokens,omitempty"` // Tokens served from DRAM cache
-	SramCachedTokens int `json:"sram_cached_tokens,omitempty"` // Tokens served from SRAM cache
+// XGroqStream represents Groq-specific metadata in streaming responses
+type XGroqStream struct {
+	ID             *string          `json:"id,omitempty"`              // Sent in first and final chunk
+	Debug          *XGroqDebug      `json:"debug,omitempty"`           // Only when debug=true
+	Seed           *int             `json:"seed,omitempty"`            // Sent in final chunk
+	Usage          *CompletionUsage `json:"usage,omitempty"`           // Usage stats in final chunk
+	UsageBreakdown *UsageBreakdown  `json:"usage_breakdown,omitempty"` // Per-model usage for compound AI
+	Error          *string          `json:"error,omitempty"`           // Error if stream stopped early
+}
+
+// XGroqUsage represents Groq-specific hardware cache statistics
+type XGroqUsage struct {
+	DramCachedTokens *int `json:"dram_cached_tokens,omitempty"` // Number of tokens served from DRAM cache
+	SramCachedTokens *int `json:"sram_cached_tokens,omitempty"` // Number of tokens served from SRAM cache
 }
 
 // XGroqDebug represents debug information
@@ -158,11 +162,13 @@ type ChatCompletionChunkDelta struct {
 // - string for simple text messages
 // - []ContentPart for multimodal messages (text, images, documents)
 type ChatCompletionMessageParam struct {
-	Role       Role        `json:"role"`
-	Content    interface{} `json:"content"` // string or []ContentPart
-	Name       string      `json:"name,omitempty"`
-	ToolCalls  []ToolCall  `json:"tool_calls,omitempty"`
-	ToolCallID string      `json:"tool_call_id,omitempty"`
+	Role         Role          `json:"role"`
+	Content      interface{}   `json:"content"`                 // string or []ContentPart
+	Name         string        `json:"name,omitempty"`          // Optional name for participant
+	ToolCalls    []ToolCall    `json:"tool_calls,omitempty"`    // For assistant messages with tool calls
+	ToolCallID   string        `json:"tool_call_id,omitempty"`  // For tool messages
+	FunctionCall *FunctionCall `json:"function_call,omitempty"` // Deprecated: use tool_calls instead
+	Reasoning    *string       `json:"reasoning,omitempty"`     // For assistant messages with reasoning_format=parsed
 }
 
 // CreateChatCompletionRequest represents the request body
@@ -188,6 +194,10 @@ type CreateChatCompletionRequest struct {
 	User                  string                       `json:"user,omitempty"`
 	ParallelToolCalls     *option.Optional[bool]       `json:"parallel_tool_calls,omitempty"`
 	DisableToolValidation bool                         `json:"disable_tool_validation,omitempty"`
+
+	// Deprecated: use Tools instead
+	Functions    []FunctionDefinition `json:"functions,omitempty"`
+	FunctionCall interface{}          `json:"function_call,omitempty"` // "none", "auto", "required", or {"name": "func_name"}
 
 	// Compound AI
 	CompoundCustom *CompoundCustom `json:"compound_custom,omitempty"`
